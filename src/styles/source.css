@@ -1,0 +1,79 @@
+/* Where things came from: the place's own mark, small, on a white chip.
+   On a stack only when everything in it came from one place, on a note
+   always, on a loose image only while you hover it. */
+.source-mark {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  background: var(--card);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-mark);
+  pointer-events: none;
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out);
+}
+
+.source-mark .favicon {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--r-xs);
+  background: none;
+}
+
+.source-mark .favicon-letter {
+  font-size: var(--text-2xs);
+}
+
+/* On a pile: the cover's lower left corner, so it fans with the cover. */
+.stack-card > .source-mark {
+  left: 8px;
+  bottom: 8px;
+}
+
+/* On a note: its top right corner, clear of the heading. */
+.note > .source-mark {
+  top: 12px;
+  right: 12px;
+}
+
+.note[data-sourced] .note-head {
+  padding-right: 24px;
+}
+
+/* On a loose image: only while you look at it. */
+.card .card-media {
+  position: relative;
+}
+
+.card-media > .source-mark {
+  left: 8px;
+  bottom: 8px;
+  opacity: 0;
+}
+
+.card:hover .card-media > .source-mark {
+  opacity: var(--detail, 1);
+}
+
+/* In an opened image's details, beside where it came from. */
+.detail-fact .source-mark {
+  position: static;
+  display: inline-grid;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: -3px;
+  border-radius: var(--r-xs);
+  box-shadow: var(--shadow-mark);
+  opacity: 1;
+}
+
+/* Here the icon is the whole mark, edge to edge: big enough to recognise. */
+.detail-fact .source-mark .favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r-xs);
+}

@@ -1,0 +1,192 @@
+/* The open project, top left: a pill like the toolbar, beside the window
+   buttons, and in the corner (on the board's own margin) when full screen.
+   Its size, weight and corners are its own, as approved; only the shadow
+   and the white come from the scale. */
+.project-chip {
+  position: fixed;
+  top: 5px;
+  left: 80px;
+  z-index: 31;
+  transition: opacity var(--t-base) ease;
+}
+
+.project-chip[data-full] {
+  top: 16px;
+  left: 16px;
+}
+
+/* An opened stack or a lifted live card has the window to itself: the pill
+   steps aside, and comes back when it closes. */
+body:has(.focus, .lift) .project-chip {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.project-chip-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 8px 0 11px;
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--ink);
+  border-radius: 9px;
+  transition: background var(--t-fast) ease;
+}
+
+.project-chip[data-full] .project-chip-button {
+  height: 32px;
+  padding: 0 10px 0 13px;
+  font-size: var(--text-md);
+  border-radius: 10px;
+}
+
+/* A small control's shadow, solid white: the chrome's wide shadow and
+   frosted glass are for the big toolbar. */
+.project-chip-button.chrome {
+  background: var(--card);
+  box-shadow: var(--shadow-control);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.project-chip-button.chrome:hover,
+.project-chip-button.chrome[aria-expanded="true"] {
+  box-shadow: var(--shadow-control-hot);
+}
+
+.project-chip-name {
+  max-width: 220px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.project-chip-button > svg:last-child {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2;
+  color: var(--ink-3);
+  transition: transform var(--t-base) var(--ease-out);
+}
+
+.project-chip-button[aria-expanded="true"] > svg:last-child {
+  transform: rotate(180deg);
+}
+
+/* The menu: where the project lives, recent ones, and what to do with it.
+   Groups are set apart by space and a faint band, never a line. */
+.project-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 240px;
+  max-width: 300px;
+  padding: 7px;
+  transform-origin: top left;
+}
+
+.project-menu-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px 9px;
+  background: var(--fill-1);
+  border-radius: var(--r-control);
+}
+
+.project-menu-name {
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* The path, and copying it: the whole line is the button, the copy icon at
+   its end. Copied, the line says so in ink for a moment. */
+.project-menu .project-menu-path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 -6px -4px;
+  padding: 3px 6px 4px;
+  font: var(--text-xs) var(--mono);
+  color: var(--ink-3);
+  border-radius: var(--r-sm);
+  cursor: copy;
+  transition: color var(--t-fast) ease, background var(--t-fast) ease;
+}
+
+.project-menu .project-menu-path:hover {
+  color: var(--ink-2);
+  background: var(--fill-1);
+}
+
+.project-menu-path[data-copied] {
+  color: var(--ink);
+}
+
+.project-menu-path-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.project-menu-copy {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  opacity: 0.55;
+  transition: opacity var(--t-fast) ease;
+}
+
+.project-menu-path:hover .project-menu-copy,
+.project-menu-path[data-copied] .project-menu-copy {
+  opacity: 1;
+}
+
+.project-menu-copy svg {
+  display: block;
+  width: 13px;
+  height: 13px;
+  stroke-width: 2;
+}
+
+.project-menu-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-menu-label {
+  padding: 6px 10px 3px;
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.project-menu button {
+  padding: 7px 10px;
+  font-size: var(--text-md);
+  color: var(--ink);
+  text-align: left;
+  border-radius: var(--r-control);
+  transition: background var(--t-fast) ease;
+}
+
+.project-menu button:hover {
+  background: var(--fill-2);
+}
+
+.project-menu-note {
+  max-width: 220px;
+  padding: 7px 10px;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--ink-2);
+}

@@ -1,0 +1,24 @@
+# On every push and pull request: the types and the tests. The 60 fps check
+# needs a real Mac's WebKit, so it runs on your own machine (pnpm bench).
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: npx tsc --noEmit -p tsconfig.json
+      - run: pnpm test

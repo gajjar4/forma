@@ -1,0 +1,302 @@
+/* Documents (src/canvas/nodes/DocFace.tsx, src/focus/DocSheet.tsx): a sheet
+   of paper in the note's family, white with the soft shadow cards have, laid
+   out in container units so it reads the same at every size. And the one
+   line a new board shows. */
+
+/* Markdown and text: one page, the same on the board, in a pile, in an
+   opened stack and lifted, so lifting it only scales it and nothing rewraps.
+   It is designed at the width it is read at (DOC_READ_WIDTH, 480px): --u is
+   one px of that page, so the sizes below are the tokens' own (14 is
+   --text-lg) when lifted, and the same page made small anywhere else. On the
+   board it is the top of that page, cut off. What runs past the bottom fades
+   in the padding instead of being cut. */
+.face-doc[data-doc="text"] {
+  --u: calc(100cqw / 480);
+}
+
+.face-doc[data-doc="text"] .face-in {
+  padding: calc(36 * var(--u));
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 36 * var(--u)), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 36 * var(--u)), transparent);
+}
+
+/* The file's name, small, above the page's words. */
+.face-doc-name {
+  flex: none;
+  margin-bottom: calc(20 * var(--u));
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: calc(11 * var(--u));
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink-3);
+}
+
+.doc-text,
+.md {
+  display: block;
+  font-size: calc(14 * var(--u));
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+/* Zoomed out the words are grey mush: on the board they fade with its detail. */
+.face-doc:not(.face-read) :is(.doc-text, .md) {
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+.doc-text {
+  white-space: pre-wrap;
+}
+
+.md > :first-child {
+  margin-top: 0;
+}
+
+.md-head {
+  margin: 1.4em 0 0.5em;
+  font-size: calc(15 * var(--u));
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: var(--track-tight);
+}
+
+.md-head[data-level="1"] {
+  font-size: calc(18 * var(--u));
+}
+
+.md-head[data-level="3"] {
+  font-size: calc(14 * var(--u));
+}
+
+.md-p,
+.md-list,
+.md-quote,
+.md-code {
+  margin: 0 0 0.9em;
+}
+
+.md-list {
+  padding-left: 1.3em;
+}
+
+.md-list li + li {
+  margin-top: 0.25em;
+}
+
+/* Set apart by a faint band, as DESIGN.md has groups. */
+.md-quote {
+  padding: calc(10 * var(--u)) calc(14 * var(--u));
+  color: var(--ink-2);
+  background: var(--fill-1);
+  border-radius: calc(8 * var(--u));
+}
+
+.md-code,
+.md code {
+  font-family: var(--mono);
+  font-size: calc(12 * var(--u));
+  background: var(--fill-1);
+}
+
+/* Long lines run on to the right, cut on the board; lifted they scroll,
+   with no scrollbar to take room. */
+.md-code {
+  padding: calc(12 * var(--u)) calc(14 * var(--u));
+  overflow: hidden;
+  white-space: pre;
+  border-radius: calc(8 * var(--u));
+  scrollbar-width: none;
+}
+
+.face-read .md-code {
+  overflow-x: auto;
+}
+
+.md-code::-webkit-scrollbar {
+  display: none;
+}
+
+.md code {
+  padding: calc(1 * var(--u)) calc(4 * var(--u));
+  border-radius: calc(4 * var(--u));
+}
+
+/* A break between parts, as space. */
+.md-rule {
+  height: 0.6em;
+}
+
+.md-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--ink-3);
+  text-underline-offset: calc(2 * var(--u));
+}
+
+.face-read a.md-link {
+  cursor: pointer;
+}
+
+/* Any other file: its kind in small mono capitals at the top, its name at the bottom, like a link's. */
+.face-doc[data-doc="file"] .face-in {
+  justify-content: space-between;
+  padding: 8cqw;
+}
+
+.face-doc-ext {
+  font-family: var(--mono);
+  font-size: 6.6cqw;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.face-doc-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 7.4cqw;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+/* A PDF: its first page, from the top. */
+.face-doc[data-doc="pdf"] img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* On the board a document is a white card, as round as a note or a link. */
+.card[data-kind="doc"] .card-media {
+  border-radius: var(--r-card);
+}
+
+/* In an opened stack, the soft shadow white cards have on the board. */
+.ft[data-kind="doc"] .ft-media {
+  background: var(--card);
+  box-shadow: var(--shadow-rest);
+}
+
+/* Lifted to read: clicks stay on the sheet (selecting, links, scrolling). */
+.lift-media[data-kind="doc"] {
+  cursor: auto;
+}
+
+/* A PDF, read big (src/focus/PdfSheet.tsx): its pages drawn by us as one
+   column of white paper over the still, scrolling, with no scrollbar. The
+   board's own off-white shows in the gap between two pages. The column fades
+   in once the first page is drawn, exactly over the still, and off it again
+   on the way home. */
+.doc-pdf {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.doc-pages,
+.doc-pdf-still {
+  position: absolute;
+  inset: 0;
+}
+
+.doc-pages {
+  overflow: hidden;
+  background: var(--canvas);
+  scrollbar-width: none;
+  opacity: 0;
+  transition: opacity var(--t-fast) ease;
+}
+
+.doc-pages[data-ready] {
+  overflow: auto;
+}
+
+/* In gently once drawn; off quickly as it leaves. */
+.doc-pages[data-shown] {
+  opacity: 1;
+  transition-duration: var(--t-base);
+}
+
+.doc-pages::-webkit-scrollbar {
+  display: none;
+}
+
+.doc-page {
+  position: relative;
+  overflow: hidden;
+  background: var(--card);
+}
+
+.doc-page + .doc-page {
+  margin-top: 8px;
+}
+
+.doc-page canvas {
+  position: absolute;
+  top: 0;
+  display: block;
+  opacity: 0;
+  transition: opacity var(--t-fast) ease;
+}
+
+.doc-page canvas[data-drawn] {
+  opacity: 1;
+}
+
+/* The first page shows as the column fades in: fading it in as well would
+   let the still show through it for a moment. */
+.doc-page:first-child canvas {
+  transition: none;
+}
+
+/* The one action under a lifted document. */
+.doc-actions {
+  position: absolute;
+  left: 50%;
+  z-index: 1;
+  translate: -50% 0;
+  cursor: auto;
+}
+
+/* A new board's one line, under its project (src/canvas/EmptyHint.tsx). */
+.empty-hint {
+  position: absolute;
+  translate: -50% 0;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  color: var(--ink-3);
+  pointer-events: none;
+}
+
+.empty-hint-line {
+  display: inline-block;
+}
+
+/* The one part that takes a click: it copies a prompt to start with. */
+.empty-hint-ask {
+  padding: 0;
+  font: inherit;
+  color: var(--ink-2);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-decoration-color: var(--ink-3);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color var(--t-fast) ease;
+}
+
+.empty-hint-ask:hover {
+  color: var(--ink);
+}

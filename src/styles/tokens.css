@@ -1,0 +1,126 @@
+/* Forma's tokens. Light theme; the dark theme will redefine the same names.
+   Plain rgba only (no color-mix) so Safari's engine renders them all.
+   DESIGN.md says when to use each. The scale, in short:
+
+   Colour   ink, a warm off-white, white, and greys made of ink. Nothing else:
+            colour only ever comes from the research itself. The one
+            exception is the blue "new since you last looked" dot
+            (changes.css), and it is used nowhere else.
+            text: --ink, --ink-2 (secondary), --ink-3 (quiet)
+            ink tints: --fill-1 (a resting band), --fill-2 (hover), --fill-3 (pressed)
+   Radius   --r-xs 4 (icons inside chips)    --r-sm 6 (marks, thumbnails, keys)
+            --r-control 8 (buttons, rows, fields, pictures, pile cards)
+            --r-card 12 (white cards: notes, links, live cards)
+            --r-panel 14 (chrome panels, anything lifted)
+            --r-block 22 (the project)       --r-area 28 (areas)   --r-round
+   Shadow   --shadow-rest (on the board)     --shadow-lift (selected, dragged)
+            --shadow-high (lifted toward you, held)
+            --shadow-chrome (toolbar, zoom, search, menus, dials)
+            --shadow-control (small controls: pills, chips, round buttons)
+            --shadow-mark (source and video marks, swatches)
+            --paper-shadow (the corner of paper behind an image)
+            No borders or outlines anywhere: chrome's edge is the 0.5px ring
+            inside --shadow-chrome and --shadow-control.
+   Type     --text-2xs 10 (mono capitals)  --text-xs 11  --text-sm 12
+            --text-md 13 (the body)  --text-lg 14  --text-xl 15 (headings)
+            --text-2xl 18 (an image's note)  --text-display 30 (the project)
+            weights 400, 500 (names), 600 (headings)
+   Motion   --t-fast 0.15s (hover colour)  --t-base 0.2s (state, shadow)
+            --t-slow 0.32s (fades and glides with the zoom)  --t-glide 0.45s
+            --ease-out for movement, --spring for a small pop, plain `ease`
+            for colour. Springs in JS come from src/focus/motion.ts. */
+
+:root {
+  /* A warm off-white, a touch below pure white so white cards lift off it
+     without needing borders. */
+  --canvas: #f5f5f3;
+  /* Board dots: one size at every zoom, drawn on whole device pixels. */
+  --dot: rgba(20, 20, 18, 0.2);
+  --dot-size: 2px;
+
+  --card: #ffffff;
+  --ink: #161615;
+  --ink-2: rgba(22, 22, 21, 0.58);
+  --ink-3: rgba(22, 22, 21, 0.36);
+  --hairline: rgba(22, 22, 21, 0.08);
+
+  /* Ink tints for surfaces: a resting band, under the pointer, pressed. */
+  --fill-1: rgba(22, 22, 21, 0.035);
+  --fill-2: rgba(22, 22, 21, 0.06);
+  --fill-3: rgba(22, 22, 21, 0.12);
+
+  /* On the dark project block: text, and the same three steps in white. */
+  --on-ink: #f5f5f3;
+  --on-ink-2: rgba(245, 245, 243, 0.88);
+  --on-ink-3: rgba(245, 245, 243, 0.45);
+  --on-ink-fill-1: rgba(255, 255, 255, 0.08);
+  --on-ink-fill-2: rgba(255, 255, 255, 0.14);
+
+  --wire: rgba(22, 22, 21, 0.34);
+  --wire-hot: #161615;
+  --port: #161615;
+  --drop: rgba(22, 22, 21, 0.06);
+
+  /* Areas: a faint tint of the board, a touch stronger under the pointer. */
+  --area: rgba(22, 22, 21, 0.025);
+  --area-hot: rgba(22, 22, 21, 0.045);
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-control: 8px;
+  --r-card: 12px;
+  --r-panel: 14px;
+  --r-block: 22px;
+  --r-area: 28px;
+  --r-round: 999px;
+
+  --shadow-rest: 0 1px 2px rgba(18, 18, 16, 0.06), 0 6px 16px rgba(18, 18, 16, 0.06);
+  --shadow-lift: 0 2px 6px rgba(18, 18, 16, 0.08), 0 22px 44px rgba(18, 18, 16, 0.16);
+  --shadow-high: 0 4px 12px rgba(18, 18, 16, 0.1), 0 36px 72px rgba(18, 18, 16, 0.22);
+  /* Floating chrome. Its edge is a 0.5px ring of ink, never a border. */
+  --shadow-chrome: 0 0 0 0.5px rgba(22, 22, 21, 0.1), 0 1px 2px rgba(18, 18, 16, 0.06), 0 8px 24px rgba(18, 18, 16, 0.08);
+  /* A small control (a pill, a chip, a round button): crisp and close, like
+     a macOS button. The wide chrome shadow turns into a grey halo on
+     something this small. */
+  --shadow-control: 0 0 0 0.5px rgba(22, 22, 21, 0.1), 0 1px 2px rgba(18, 18, 16, 0.07), 0 2px 5px rgba(18, 18, 16, 0.04);
+  --shadow-control-hot: 0 0 0 0.5px rgba(22, 22, 21, 0.12), 0 1px 3px rgba(18, 18, 16, 0.09), 0 3px 8px rgba(18, 18, 16, 0.06);
+  /* A small mark sitting on a picture: a source, a video, a swatch. */
+  --shadow-mark: 0 1px 2px rgba(18, 18, 16, 0.12), 0 2px 6px rgba(18, 18, 16, 0.06);
+  /* Something held over a target: the board's tint around it, lifted. */
+  --shadow-drop: 0 0 0 10px var(--drop), var(--shadow-lift);
+  /* A soft backing the colour of the board behind a title, so a wire passing
+     under fades out around the words. Not a blurred text shadow: WebKit
+     repaints labels while you zoom, and blurred text cost frames. */
+  --halo: 0 0 4px 3px var(--canvas);
+
+  --veil: rgba(245, 245, 243, 0.7);
+
+  /* The corner of paper behind an image that has a note. */
+  --paper: #f6efdc;
+  --paper-shadow: 0 1px 1.5px rgba(18, 18, 16, 0.1), 0 2px 6px rgba(18, 18, 16, 0.06);
+  --r-paper: 2px;
+
+  --font: "Geist Variable", -apple-system, "SF Pro Text", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text-2xs: 10px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-md: 13px;
+  --text-lg: 14px;
+  --text-xl: 15px;
+  --text-2xl: 18px;
+  --text-display: 30px;
+
+  --track-display: -0.025em;
+  --track-tight: -0.01em;
+  --track-title: -0.005em;
+  --track-caps: 0.08em;
+
+  --t-fast: 0.15s;
+  --t-base: 0.2s;
+  --t-slow: 0.32s;
+  --t-glide: 0.45s;
+  --spring: cubic-bezier(0.2, 0.9, 0.25, 1.15);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

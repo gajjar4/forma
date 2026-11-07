@@ -1,0 +1,142 @@
+/* Faces: a note or a link drawn inside a box (a card on the board, a card in
+   a pile, a tile in an opened stack). Sizes are in container units, so a face
+   reads exactly the same at any size, and a pile card grows into its tile
+   without its lines breaking differently. Notes are designed at 152px wide,
+   links at 176px (see NOTE_SHAPE and LINK_SHAPE in src/model/items.ts). */
+
+.face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  container-type: size;
+  text-align: left;
+  color: var(--ink);
+  background: var(--card);
+}
+
+.face-in {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+/* Note: heading, then the rest. One layout at every size, in container units,
+   so a pile card, a tile in an opened stack and a lifted note are the same
+   sheet of paper, line for line: lifting one only scales it (Lift.tsx). 1cqw
+   is 1.52px on a pile's cover, about 1.86px on a tile in an opened stack and
+   2.8px lifted, so the body reads at 9, 11 and 17px. What runs past the
+   bottom fades in the padding instead of being cut. */
+.face-note .face-in {
+  gap: 3.2cqw;
+  padding: 8cqw;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 8cqw), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 8cqw), transparent);
+}
+
+.face-note-head,
+.face-note-body {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.face-note-head {
+  flex: none;
+  font-size: 7.4cqw;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.face-note-body {
+  font-size: 6cqw;
+  line-height: 1.45;
+  white-space: pre-line;
+  color: var(--ink-2);
+  /* Zoomed out the lines are grey mush: fade them with the board's detail. */
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+/* A note lifted to read: the same sheet, scrolling when it's long. No
+   scrollbar, which would take width and rewrap the lines. */
+.face-read .face-in {
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.face-read .face-in::-webkit-scrollbar {
+  display: none;
+}
+
+/* Link: icon at the top, title and host at the bottom. 1cqw = 1.76px at design size. */
+.face-link .face-in {
+  justify-content: space-between;
+  padding: 8cqw;
+}
+
+.favicon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 15.9cqw;
+  height: 15.9cqw;
+  overflow: hidden;
+  border-radius: 4cqw;
+  background: var(--fill-1);
+}
+
+.favicon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.favicon-letter {
+  font-size: 8cqw;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.face-link-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1cqw;
+  min-width: 0;
+}
+
+.face-link-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 7.1cqw;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.face-link-host {
+  overflow: hidden;
+  font-size: 6cqw;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink-3);
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+/* Live card at rest: a soft surface, white light falling across the
+   board's own off-white. No colour of its own: the component brings that. */
+.face-live {
+  background:
+    radial-gradient(120% 90% at 18% 12%, rgba(255, 255, 255, 0.95), transparent 62%),
+    radial-gradient(110% 100% at 88% 96%, var(--fill-1), transparent 64%),
+    var(--canvas);
+}
+

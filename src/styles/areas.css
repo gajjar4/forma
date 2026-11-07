@@ -1,0 +1,137 @@
+/* Areas: soft zones on the board that group things. A faint tint, large
+   corners, and no border or outline of any kind, at rest, on hover or when
+   selected; a slightly stronger tint is all that changes. */
+
+/* Only the name and the resize edges take the pointer, so selecting and
+   panning work straight across an area. React Flow sets pointer-events
+   inline on every node, hence the !important. */
+.react-flow__node-area {
+  pointer-events: none !important;
+}
+
+.area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--area);
+  border-radius: var(--r-area);
+  transition: background var(--t-base) ease;
+}
+
+.react-flow__node-area:hover .area,
+.area[data-selected] {
+  background: var(--area-hot);
+}
+
+/* The name sits just above the area's top-left corner, like a section
+   heading, so however large it grows it never covers what's inside. */
+.area-title,
+.area-rename {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 6px;
+  max-width: calc(100% - 24px);
+  padding: 3px 6px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: var(--track-title);
+  pointer-events: auto;
+}
+
+/* An area's name is a section heading: a touch larger than a stack title,
+   and like titles it stays readable when zoomed out (--z is the zoom, written
+   by zoom.ts once a zoom settles), growing upward from its corner. */
+.area-title {
+  overflow: hidden;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: grab;
+  border-radius: var(--r-sm);
+  transform-origin: left bottom;
+  scale: clamp(1, calc(0.9 / var(--z, 1)), 4);
+  transition: color var(--t-fast) ease, scale var(--t-slow) var(--ease-out);
+}
+
+.area-title:active {
+  cursor: grabbing;
+}
+
+.react-flow__node-area:hover .area-title,
+.area[data-selected] .area-title {
+  color: var(--ink);
+}
+
+.area-rename {
+  width: 180px;
+  color: var(--ink);
+  background: var(--card);
+  border: none;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-control);
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Resize edges: invisible strips along each side, wide enough to grab. */
+.react-flow__resize-control.area-edge {
+  pointer-events: auto;
+  border-color: transparent;
+}
+
+.react-flow__resize-control.area-edge.left,
+.react-flow__resize-control.area-edge.right {
+  width: 12px;
+  border-width: 0;
+}
+
+.react-flow__resize-control.area-edge.top,
+.react-flow__resize-control.area-edge.bottom {
+  height: 12px;
+  border-width: 0;
+}
+
+/* Corners: a small soft dot that only shows while the area is under the
+   pointer or selected. Filled, never outlined. */
+.react-flow__resize-control.area-handle {
+  width: 16px;
+  height: 16px;
+  pointer-events: auto;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+}
+
+.react-flow__resize-control.area-handle::after {
+  position: absolute;
+  inset: 5px;
+  content: "";
+  background: var(--ink-3);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--t-fast) ease;
+}
+
+.react-flow__node-area:hover .area-handle::after,
+.area[data-selected] .area-handle::after {
+  opacity: 1;
+}
+
+/* Each dot sits on the rounded corner itself, not out at the square one. */
+.area-handle.top.left::after {
+  transform: translate(8px, 8px);
+}
+.area-handle.top.right::after {
+  transform: translate(-8px, 8px);
+}
+.area-handle.bottom.left::after {
+  transform: translate(8px, -8px);
+}
+.area-handle.bottom.right::after {
+  transform: translate(-8px, -8px);
+}

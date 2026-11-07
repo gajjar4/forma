@@ -1,0 +1,241 @@
+/* Live cards: a small coded component on the board, and opened big. No
+   borders anywhere, only soft shadows. */
+
+/* On the board. The frame lies over the still face and takes no pointer, so
+   the card drags, snaps and stacks like any other. It fades in once its page
+   has loaded. */
+.card-media.live {
+  position: relative;
+  border-radius: var(--r-card);
+}
+
+.live-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--card);
+  opacity: 0;
+  transition: opacity var(--t-glide) var(--ease-out);
+}
+
+.live-frame[data-loaded] {
+  opacity: 1;
+}
+
+.card-media.live .live-frame {
+  pointer-events: none;
+}
+
+/* A click opens it big, the way a click opens a stack. */
+.card[data-kind="live"] .card-media {
+  cursor: zoom-in;
+}
+
+.react-flow__node.dragging .card[data-kind="live"] .card-media {
+  cursor: grabbing;
+}
+
+/* Its name, under it like a stack's: it never fades, and zoomed out it grows
+   so you can still read what each one is (body.ts keeps wires clear of it). */
+.card[data-kind="live"] .card-title {
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: var(--track-title);
+  color: var(--ink);
+  white-space: nowrap;
+  scale: clamp(1, calc(0.96 / var(--z, 1)), 3.4);
+  opacity: 1;
+}
+
+/* While it's open big, its card on the board waits hidden underneath. */
+.card[data-lifted] .card-media {
+  visibility: hidden;
+}
+
+/* In an opened stack it is a card like a note or link. */
+.ft[data-kind="live"] .ft-media {
+  box-shadow: var(--shadow-rest);
+}
+
+/* Opened big: the title above, the component in its own rounded box. */
+.lift-media[data-kind="live"] {
+  position: relative;
+  overflow: visible;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: auto;
+}
+
+.live-stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--card);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-high);
+}
+
+.live-stage-title {
+  position: absolute;
+  bottom: 100%;
+  left: 2px;
+  padding-bottom: 14px;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: var(--track-tight);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* Its dials, beside it: a quiet white panel that grows out with the card.
+   Each slider is a row you drag across; the fill shows where it sits. */
+.dials {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 20px);
+  box-sizing: border-box;
+  width: 232px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--card);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-chrome);
+  font-family: var(--font);
+  user-select: none;
+  -webkit-user-select: none;
+  animation: dials-in var(--t-slow) var(--ease-out) both;
+}
+
+/* Putting the card back: the dials step away the way they came, quickly,
+   so they're gone before the card lands instead of shrinking with it and
+   vanishing at the end. */
+.dials[data-leaving] {
+  animation: none;
+  opacity: 0;
+  transform: translateX(-6px);
+  pointer-events: none;
+  transition: opacity var(--t-fast) var(--ease-out), transform var(--t-base) var(--ease-out);
+}
+
+@keyframes dials-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
+.dials-title {
+  padding: 2px 4px 6px;
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: var(--track-tight);
+  color: var(--ink);
+}
+
+.dials-group {
+  padding: 8px 4px 2px;
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.dial {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  padding: 0 10px;
+  overflow: hidden;
+  font: inherit;
+  color: inherit;
+  background: var(--fill-1);
+  border-radius: var(--r-control);
+  outline: none;
+  isolation: isolate;
+}
+
+.dial-slider {
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+/* The fill: a layer scaled from the left, so dragging only moves a transform. */
+.dial-slider::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--fill-2);
+  transform: scaleX(var(--fill, 0));
+  transform-origin: 0 50%;
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.dial-slider[data-dragging]::before {
+  transition: none;
+}
+
+.dial:hover,
+.dial:focus-visible {
+  background: var(--fill-2);
+}
+
+.dial-slider[data-dragging]::before,
+.dial-slider:focus-visible::before {
+  background: var(--fill-3);
+}
+
+.dial-label {
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+.dial-value {
+  font: var(--text-xs) var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.dial-switch {
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+}
+
+.dial-toggle {
+  position: relative;
+  width: 24px;
+  height: 14px;
+  background: var(--fill-3);
+  border-radius: var(--r-round);
+  transition: background-color var(--t-base) ease;
+}
+
+.dial-toggle::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  background: var(--card);
+  border-radius: 50%;
+  box-shadow: var(--shadow-mark);
+  transition: transform var(--t-base) var(--spring);
+}
+
+.dial-toggle[data-on] {
+  background: var(--ink);
+}
+
+.dial-toggle[data-on]::after {
+  transform: translateX(10px);
+}

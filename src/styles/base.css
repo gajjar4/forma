@@ -1,0 +1,262 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--text-md);
+  color: var(--ink);
+  background: var(--canvas);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* The window's hidden title bar: drag the window from the top strip. */
+.titlebar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 28px;
+  z-index: 30;
+}
+
+.board {
+  position: fixed;
+  inset: 0;
+}
+
+/* The dot grid sits under the board's contents. A canvas drawn by DotGrid.tsx;
+   dots keep one size at any zoom. */
+.dots {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  background: var(--canvas);
+}
+
+/* The board's content gets its own graphics layer. Without it, WebKit
+   repaints every image on the board whenever the dot layer underneath
+   changes (the hover dots, a wire being pulled), which made panning over a
+   card drop to about 7 frames a second on a board full of images. With it,
+   a steady 60. Measured in WebKit; text stays as sharp at high zoom. */
+.react-flow__viewport {
+  will-change: transform;
+}
+
+/* Painted once per zoom, larger than the window, and slid while panning. */
+.dots-grid {
+  position: absolute;
+  top: -160px;
+  left: -160px;
+  width: calc(100% + 320px);
+  height: calc(100% + 320px);
+  will-change: transform;
+}
+
+/* Sized to the dots in use and slid with the board. */
+.dots-fx {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  will-change: transform;
+}
+
+/* No focus rings or outlines on the board, ever. Keyboard focus still works. */
+.react-flow__node,
+.react-flow__node:focus,
+.react-flow__node:focus-visible,
+.react-flow__edge,
+.react-flow__edge:focus,
+.react-flow__edge:focus-visible,
+.react-flow__pane:focus,
+.react-flow__pane:focus-visible {
+  outline: none;
+}
+
+.board[data-tool="hand"] .react-flow__pane {
+  cursor: grab;
+}
+
+.board[data-tool="hand"] .react-flow__pane.dragging {
+  cursor: grabbing;
+}
+
+/* Marquee selection: a tint of the board, like an area. No edge. */
+.react-flow__selection,
+.react-flow__nodesselection-rect {
+  background: var(--fill-2);
+  border: 0;
+  border-radius: var(--r-sm);
+}
+
+/* Wires. */
+/* Wires: a thin solid line that fades out at both ends, so it comes out of
+   one thing and goes into the other without touching either. The dots stay
+   the grid's alone. The colour sits on the gradient's stops, so the fade and
+   the colour change together. */
+.wire {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  pointer-events: none;
+  transition: stroke-width var(--t-base) ease;
+}
+
+.wire-stop {
+  stop-color: var(--wire);
+  transition: stop-color var(--t-base) ease;
+}
+
+/* Hovered or selected: a little darker and heavier, so you can see what it joins. */
+.wire[data-hot] {
+  stroke-width: 2;
+}
+
+/* At rest a wire with a note is drawn as two parts that fade out toward the
+   note (.wire-part); hovered or zoomed out, as one whole line. LinkEdge draws
+   only one version at a time, so zooming stays cheap. */
+
+.wire-stop[data-hot] {
+  stop-color: var(--wire-hot);
+}
+
+.wire-tip {
+  fill: var(--card);
+  stroke: var(--wire-hot);
+  stroke-width: 1.5;
+}
+
+.wire-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 18;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+/* A wire's note. At rest it is quiet: small grey text with the line fading
+   away around it (see .wire-part), no backing, no pill, no border.
+   Hover the wire or the note, select the wire, or write on it, and it becomes
+   the white pill. Zoomed out it fades with the board's detail (see nodes.css)
+   and only shows when you hover. */
+.wire-label {
+  position: absolute;
+  pointer-events: all;
+  opacity: var(--detail, 1);
+}
+
+.wire-label[data-hot] {
+  opacity: 1;
+}
+
+.wire-note,
+.wire-input {
+  display: block;
+  max-width: 240px;
+  font-size: var(--text-sm);
+  line-height: 16px;
+  border: 0;
+  border-radius: var(--r-round);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wire-note {
+  padding: 2px 8px;
+  color: var(--ink-2);
+  background: transparent;
+  scale: 0.94;
+  transition: padding var(--t-base) var(--ease-out), color var(--t-fast) ease, background-color var(--t-fast) ease,
+    box-shadow var(--t-fast) ease, scale var(--t-base) var(--spring);
+}
+
+/* The pill, grown to stay readable when zoomed out. */
+.wire-label[data-hot] .wire-note,
+.wire-input {
+  padding: 6px 12px;
+  color: var(--ink);
+  background: var(--card);
+  box-shadow: var(--shadow-control);
+  scale: clamp(1, calc(0.9 / var(--z, 1)), 2.4);
+}
+
+.wire-input {
+  width: 220px;
+  outline: none;
+}
+
+.wire-input::placeholder {
+  color: var(--ink-3);
+}
+
+.wire-add {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: var(--ink);
+  background: var(--card);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: var(--shadow-control);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity var(--t-fast) ease, transform var(--t-base) var(--spring), background-color var(--t-fast) ease,
+    color var(--t-fast) ease;
+}
+
+.wire-add svg {
+  display: block;
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.wire-add:hover {
+  color: var(--card);
+  background: var(--ink);
+}
+
+.wire-add[data-show] {
+  opacity: 1;
+  transform: scale(1);
+}

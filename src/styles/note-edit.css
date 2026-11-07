@@ -1,0 +1,50 @@
+/* Writing a note (NoteEditor.tsx). The heading and each paragraph are their
+   own fields, each wearing the classes of the text it stands in for, so the
+   type, the line height and every position stay as they were. These rules
+   only take away what a textarea adds; they grow with what's in them. */
+
+textarea.note-field {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  background: transparent;
+  cursor: text;
+}
+
+/* Lowest priority, so a paragraph keeps its own spacing. */
+:where(textarea.note-field) {
+  margin: 0;
+}
+
+/* An empty heading reads "Note", as it does at rest. */
+textarea.note-field::placeholder {
+  color: inherit;
+  opacity: 1;
+}
+
+/* On the board, zoomed out, the heading grows as it does at rest (.note-show). */
+.note-editor .note-head {
+  font-size: calc(var(--text-lg) * var(--s, 1));
+}
+
+/* Lifted: the paragraphs sit one blank line apart, like the read face's. */
+.note-editor .face-note-body {
+  display: block;
+  opacity: 1;
+}
+
+.note-editor .note-para + .note-para {
+  margin-top: 1lh;
+}
+
+.note-editor .face-in {
+  cursor: text;
+}

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Soft follow</title>
+    <style>
+      /* A soft blob that follows the pointer, and drifts on its own when the
+         pointer is away. Sized from the viewport, so it reads the same on a
+         small card and opened big. Only a transform moves each frame. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        background: #f6f5f2;
+      }
+
+      html[data-mode="open"] body {
+        cursor: crosshair;
+      }
+
+      .blob {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--size, 60vmin);
+        height: var(--size, 60vmin);
+        margin: calc(var(--size, 60vmin) / -2) 0 0 calc(var(--size, 60vmin) / -2);
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 40% 38%,
+          rgba(126, 156, 255, 0.95),
+          rgba(180, 140, 255, 0.55) 42%,
+          rgba(255, 190, 170, 0.18) 66%,
+          rgba(255, 190, 170, 0) 72%
+        );
+        will-change: transform;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blob"></div>
+    <script>
+      // How a component talks to Forma. It reads where it runs from its
+      // address (#card on the board, #open opened big), and asks for dials:
+      // Forma draws them while it's open and sends every change back.
+      const forma = {
+        mode: location.hash === "#card" ? "card" : "open",
+        dials(name, config, apply) {
+          const defaults = (c) =>
+            Object.fromEntries(
+              Object.entries(c).map(([k, v]) => [
+                k,
+                Array.isArray(v) ? v[0] : v && typeof v === "object" && !v.type ? defaults(v) : v,
+              ]),
+            );
+          apply(defaults(config));
+          addEventListener("message", (e) => {
+            if (e.data && e.data.forma === "values") apply(e.data.values);
+          });
+          parent.postMessage({ forma: "dials", name, config }, "*");
+        },
+      };
+      document.documentElement.dataset.mode = forma.mode;
+
+      let follow = 0.08;
+      let size = 60;
+      forma.dials("Soft follow", { follow: [0.08, 0.02, 0.3, 0.01], size: [60, 30, 90, 1] }, (v) => {
+        follow = v.follow;
+        size = v.size;
+        document.documentElement.style.setProperty("--size", `${size}vmin`);
+      });
+
+      const blob = document.querySelector(".blob");
+      let x = innerWidth / 2;
+      let y = innerHeight / 2;
+      let tx = x;
+      let ty = y;
+      let lastMove = -Infinity;
+
+      addEventListener("pointermove", (e) => {
+        tx = e.clientX;
+        ty = e.clientY;
+        lastMove = performance.now();
+      });
+
+      function frame(now) {
+        // Away from the pointer for a while: a slow loop round the middle.
+        if (now - lastMove > 1500) {
+          const t = now / 1000;
+          tx = innerWidth * (0.5 + 0.22 * Math.sin(t * 0.7));
+          ty = innerHeight * (0.5 + 0.18 * Math.sin(t * 1.1 + 1));
+        }
+        x += (tx - x) * follow;
+        y += (ty - y) * follow;
+        const stretch = Math.min(0.18, Math.hypot(tx - x, ty - y) / 900);
+        blob.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(1 + stretch).toFixed(3)})`;
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    </script>
+  </body>
+</html>

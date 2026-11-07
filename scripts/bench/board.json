@@ -1,0 +1,735 @@
+{
+  "forma": 1,
+  "nodes": [
+    {
+      "id": "project",
+      "type": "project",
+      "x": -170,
+      "y": -80,
+      "title": "Bench",
+      "brief": "A full board for measuring frame rate. Fifty images, notes, links and wires."
+    },
+    {
+      "id": "note-1",
+      "type": "note",
+      "x": -820,
+      "y": -560,
+      "text": "Note 1\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "note-2",
+      "type": "note",
+      "x": -820,
+      "y": -200,
+      "text": "Note 2\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "note-3",
+      "type": "note",
+      "x": -820,
+      "y": 170,
+      "text": "Note 3\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "note-4",
+      "type": "note",
+      "x": -440,
+      "y": 470,
+      "text": "Note 4\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "note-5",
+      "type": "note",
+      "x": 0,
+      "y": 470,
+      "text": "Note 5\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "note-6",
+      "type": "note",
+      "x": 440,
+      "y": 470,
+      "text": "Note 6\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "note-7",
+      "type": "note",
+      "x": 880,
+      "y": 470,
+      "text": "Note 7\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "note-8",
+      "type": "note",
+      "x": -1240,
+      "y": 40,
+      "text": "Note 8\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "note-9",
+      "type": "note",
+      "x": 1320,
+      "y": 470,
+      "text": "Note 9\n\nA paragraph of research notes, long enough to wrap over a few lines on the card like a real one does."
+    },
+    {
+      "id": "stack-1",
+      "type": "stack",
+      "x": -300,
+      "y": -660,
+      "title": "Stack 1",
+      "items": [
+        {
+          "id": "bench-01",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-01.jpg",
+          "w": 1400,
+          "h": 1400,
+          "title": "Reference 1"
+        },
+        {
+          "id": "bench-02",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-02.jpg",
+          "w": 787,
+          "h": 1400,
+          "title": "Reference 2"
+        },
+        {
+          "id": "bench-03",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-03.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 3"
+        },
+        {
+          "id": "bench-04",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-04.jpg",
+          "w": 1400,
+          "h": 1050,
+          "title": "Reference 4"
+        },
+        {
+          "id": "bench-05",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-05.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 5"
+        },
+        {
+          "id": "bench-06",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-06.jpg",
+          "w": 1280,
+          "h": 720,
+          "title": "Reference 6"
+        }
+      ]
+    },
+    {
+      "id": "stack-2",
+      "type": "stack",
+      "x": 40,
+      "y": -660,
+      "title": "Stack 2",
+      "items": [
+        {
+          "id": "bench-07",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-07.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 7"
+        },
+        {
+          "id": "bench-08",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-08.jpg",
+          "w": 1400,
+          "h": 996,
+          "title": "Reference 8"
+        },
+        {
+          "id": "bench-09",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-09.jpg",
+          "w": 1400,
+          "h": 996,
+          "title": "Reference 9"
+        },
+        {
+          "id": "bench-10",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-10.jpg",
+          "w": 1280,
+          "h": 720,
+          "title": "Reference 10"
+        },
+        {
+          "id": "bench-11",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-11.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 11"
+        },
+        {
+          "id": "bench-12",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-12.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 12"
+        }
+      ]
+    },
+    {
+      "id": "stack-3",
+      "type": "stack",
+      "x": 380,
+      "y": -660,
+      "title": "Stack 3",
+      "items": [
+        {
+          "id": "bench-13",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-13.jpg",
+          "w": 1400,
+          "h": 996,
+          "title": "Reference 13"
+        },
+        {
+          "id": "bench-14",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-14.jpg",
+          "w": 1400,
+          "h": 1050,
+          "title": "Reference 14"
+        },
+        {
+          "id": "bench-15",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-15.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 15"
+        },
+        {
+          "id": "bench-16",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-16.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 16"
+        },
+        {
+          "id": "bench-17",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-17.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 17"
+        }
+      ]
+    },
+    {
+      "id": "stack-4",
+      "type": "stack",
+      "x": 560,
+      "y": -260,
+      "title": "Stack 4",
+      "items": [
+        {
+          "id": "bench-18",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-18.jpg",
+          "w": 1400,
+          "h": 1400,
+          "title": "Reference 18"
+        },
+        {
+          "id": "bench-19",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-19.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 19"
+        },
+        {
+          "id": "bench-20",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-20.jpg",
+          "w": 1400,
+          "h": 875,
+          "title": "Reference 20"
+        },
+        {
+          "id": "bench-21",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-21.jpg",
+          "w": 787,
+          "h": 1400,
+          "title": "Reference 21"
+        },
+        {
+          "id": "bench-22",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-22.jpg",
+          "w": 1400,
+          "h": 996,
+          "title": "Reference 22"
+        },
+        {
+          "id": "bench-23",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-23.jpg",
+          "w": 1400,
+          "h": 1400,
+          "title": "Reference 23"
+        },
+        {
+          "id": "bench-24",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-24.jpg",
+          "w": 1280,
+          "h": 720,
+          "title": "Reference 24"
+        }
+      ]
+    },
+    {
+      "id": "stack-5",
+      "type": "stack",
+      "x": 880,
+      "y": -260,
+      "title": "Stack 5",
+      "items": [
+        {
+          "id": "bench-25",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-25.jpg",
+          "w": 787,
+          "h": 1400,
+          "title": "Reference 25"
+        },
+        {
+          "id": "bench-26",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-26.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 26"
+        },
+        {
+          "id": "bench-27",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-27.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 27"
+        },
+        {
+          "id": "bench-28",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-28.jpg",
+          "w": 1280,
+          "h": 720,
+          "title": "Reference 28"
+        },
+        {
+          "id": "bench-29",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-29.jpg",
+          "w": 787,
+          "h": 1400,
+          "title": "Reference 29"
+        }
+      ]
+    },
+    {
+      "id": "stack-6",
+      "type": "stack",
+      "x": -820,
+      "y": 520,
+      "title": "Stack 6",
+      "items": [
+        {
+          "id": "bench-30",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-30.jpg",
+          "w": 787,
+          "h": 1400,
+          "title": "Reference 30"
+        },
+        {
+          "id": "bench-31",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-31.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 31"
+        },
+        {
+          "id": "bench-32",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-32.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 32"
+        },
+        {
+          "id": "bench-33",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-33.jpg",
+          "w": 1400,
+          "h": 996,
+          "title": "Reference 33"
+        },
+        {
+          "id": "bench-34",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-34.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 34"
+        }
+      ]
+    },
+    {
+      "id": "stack-7",
+      "type": "stack",
+      "x": 560,
+      "y": 60,
+      "title": "Stack 7",
+      "items": [
+        {
+          "id": "bench-35",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-35.jpg",
+          "w": 1400,
+          "h": 1050,
+          "title": "Reference 35"
+        },
+        {
+          "id": "bench-36",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-36.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 36"
+        },
+        {
+          "id": "bench-37",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-37.jpg",
+          "w": 1400,
+          "h": 875,
+          "title": "Reference 37"
+        },
+        {
+          "id": "bench-38",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-38.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 38"
+        },
+        {
+          "id": "bench-39",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-39.jpg",
+          "w": 787,
+          "h": 1400,
+          "title": "Reference 39"
+        }
+      ]
+    },
+    {
+      "id": "stack-8",
+      "type": "stack",
+      "x": 880,
+      "y": 60,
+      "title": "Stack 8",
+      "items": [
+        {
+          "id": "bench-40",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-40.jpg",
+          "w": 1280,
+          "h": 720,
+          "title": "Reference 40"
+        },
+        {
+          "id": "bench-41",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-41.jpg",
+          "w": 1120,
+          "h": 1400,
+          "title": "Reference 41"
+        },
+        {
+          "id": "bench-42",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-42.jpg",
+          "w": 787,
+          "h": 1400,
+          "title": "Reference 42"
+        },
+        {
+          "id": "bench-43",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-43.jpg",
+          "w": 1400,
+          "h": 1400,
+          "title": "Reference 43"
+        }
+      ]
+    },
+    {
+      "id": "stack-9",
+      "type": "stack",
+      "x": 1200,
+      "y": -100,
+      "title": "Stack 9",
+      "items": [
+        {
+          "id": "bench-44",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-44.jpg",
+          "w": 1050,
+          "h": 1400,
+          "title": "Reference 44"
+        },
+        {
+          "id": "bench-45",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-45.jpg",
+          "w": 1280,
+          "h": 720,
+          "title": "Reference 45"
+        },
+        {
+          "id": "bench-46",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-46.jpg",
+          "w": 1280,
+          "h": 720,
+          "title": "Reference 46"
+        },
+        {
+          "id": "bench-47",
+          "kind": "image",
+          "src": "/scripts/bench/media/bench-47.jpg",
+          "w": 1400,
+          "h": 875,
+          "title": "Reference 47"
+        }
+      ]
+    },
+    {
+      "id": "stack-links",
+      "type": "stack",
+      "x": -1240,
+      "y": -380,
+      "title": "Links",
+      "items": [
+        {
+          "id": "link-1",
+          "kind": "link",
+          "url": "https://www.are.na/"
+        },
+        {
+          "id": "link-2",
+          "kind": "link",
+          "url": "https://linear.app/method"
+        },
+        {
+          "id": "link-3",
+          "kind": "link",
+          "url": "https://havn.studio/"
+        },
+        {
+          "id": "link-4",
+          "kind": "link",
+          "url": "https://rauno.me/"
+        },
+        {
+          "id": "link-5",
+          "kind": "link",
+          "url": "https://www.figma.com/"
+        },
+        {
+          "id": "link-6",
+          "kind": "link",
+          "url": "https://vercel.com/design"
+        },
+        {
+          "id": "link-7",
+          "kind": "link",
+          "url": "https://tauri.app/"
+        }
+      ]
+    },
+    {
+      "id": "card-48",
+      "type": "card",
+      "x": 1200,
+      "y": 260,
+      "item": {
+        "id": "bench-48",
+        "kind": "image",
+        "src": "/scripts/bench/media/bench-48.jpg",
+        "w": 1400,
+        "h": 1050,
+        "title": "Reference 48"
+      }
+    },
+    {
+      "id": "card-49",
+      "type": "card",
+      "x": 1460,
+      "y": -300,
+      "item": {
+        "id": "bench-49",
+        "kind": "image",
+        "src": "/scripts/bench/media/bench-49.jpg",
+        "w": 787,
+        "h": 1400,
+        "title": "Reference 49"
+      }
+    },
+    {
+      "id": "card-50",
+      "type": "card",
+      "x": 1460,
+      "y": 40,
+      "item": {
+        "id": "bench-50",
+        "kind": "image",
+        "src": "/scripts/bench/media/bench-50.jpg",
+        "w": 1400,
+        "h": 1400,
+        "title": "Reference 50"
+      }
+    },
+    {
+      "id": "card-51",
+      "type": "card",
+      "x": -1240,
+      "y": 420,
+      "item": {
+        "id": "bench-51",
+        "kind": "image",
+        "src": "/scripts/bench/media/bench-51.jpg",
+        "w": 1050,
+        "h": 1400,
+        "title": "Reference 51"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "from": "project",
+      "to": "note-1",
+      "note": "Why these belong together"
+    },
+    {
+      "id": "w2",
+      "from": "project",
+      "to": "note-2"
+    },
+    {
+      "id": "w3",
+      "from": "project",
+      "to": "note-3"
+    },
+    {
+      "id": "w4",
+      "from": "project",
+      "to": "stack-1"
+    },
+    {
+      "id": "w5",
+      "from": "project",
+      "to": "stack-2",
+      "note": "Why these belong together"
+    },
+    {
+      "id": "w6",
+      "from": "project",
+      "to": "stack-4"
+    },
+    {
+      "id": "w7",
+      "from": "note-1",
+      "to": "stack-1"
+    },
+    {
+      "id": "w8",
+      "from": "note-1",
+      "to": "stack-links"
+    },
+    {
+      "id": "w9",
+      "from": "note-2",
+      "to": "stack-6",
+      "note": "Why these belong together"
+    },
+    {
+      "id": "w10",
+      "from": "note-3",
+      "to": "stack-6"
+    },
+    {
+      "id": "w11",
+      "from": "note-4",
+      "to": "stack-7"
+    },
+    {
+      "id": "w12",
+      "from": "note-5",
+      "to": "stack-7"
+    },
+    {
+      "id": "w13",
+      "from": "note-6",
+      "to": "stack-8",
+      "note": "Why these belong together"
+    },
+    {
+      "id": "w14",
+      "from": "note-7",
+      "to": "stack-9"
+    },
+    {
+      "id": "w15",
+      "from": "stack-3",
+      "to": "stack-4"
+    },
+    {
+      "id": "w16",
+      "from": "stack-4",
+      "to": "stack-5"
+    },
+    {
+      "id": "w17",
+      "from": "stack-5",
+      "to": "stack-9",
+      "note": "Why these belong together"
+    },
+    {
+      "id": "w18",
+      "from": "note-8",
+      "to": "stack-links"
+    },
+    {
+      "id": "w19",
+      "from": "note-9",
+      "to": "stack-9"
+    }
+  ]
+}

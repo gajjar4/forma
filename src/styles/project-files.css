@@ -1,0 +1,143 @@
+/* The project's working files: a row of quiet chips on the dark project
+   card, each the site's own mark and the file's name. The add and remove
+   controls only show while you hover the project. */
+.project-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out);
+}
+
+/* Nothing yet: just the add button, in the card's top right corner, so
+   hovering never changes the card's size (wires would jump). */
+.project-files[data-empty] {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  margin: 0;
+}
+
+.react-flow[data-detail="off"] .project-files {
+  pointer-events: none;
+}
+
+.project-file {
+  position: relative;
+  display: inline-flex;
+}
+
+.project-file-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  max-width: 220px;
+  padding: 0 11px 0 7px;
+  font-size: var(--text-sm);
+  color: var(--on-ink-2);
+  background: var(--on-ink-fill-1);
+  border-radius: var(--r-control);
+  cursor: pointer;
+  transition: background var(--t-fast) ease;
+}
+
+.project-file-open:hover {
+  background: var(--on-ink-fill-2);
+}
+
+.project-file-open .favicon {
+  width: 16px;
+  height: 16px;
+  padding: 2px;
+  border-radius: var(--r-xs);
+  background: var(--card);
+}
+
+.project-file-open .favicon-letter {
+  font-size: var(--text-2xs);
+  color: var(--ink);
+}
+
+.project-file-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Take it off: a small round button on the chip's corner, on hover. */
+.project-file-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: block;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  background: #3a3a37;
+  border-radius: 50%;
+  /* An even ring in the card's own colour, as if cut out of the chip: no
+     drop shadow, which sat the circle low and the cross off its centre. */
+  box-shadow: 0 0 0 2px var(--ink);
+  opacity: 0;
+  transition: opacity var(--t-fast) ease, background var(--t-fast) ease;
+}
+
+.project-file:hover .project-file-remove {
+  opacity: 1;
+}
+
+.project-file-remove:hover {
+  background: #55554f;
+}
+
+/* The icons are drawn in their button's own coordinates: each SVG is
+   exactly the button's size and its strokes meet at the button's centre,
+   so layout can't push them off. Round caps, like the wire's add button. */
+.project-file-remove svg,
+.project-file-add svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--on-ink-2);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.project-file-add {
+  display: block;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  background: var(--on-ink-fill-1);
+  border-radius: var(--r-control);
+  opacity: 0;
+  transition: opacity var(--t-fast) ease, background var(--t-fast) ease;
+}
+
+.project:hover .project-file-add {
+  opacity: 1;
+}
+
+.project-file-add:hover {
+  background: var(--on-ink-fill-2);
+}
+
+.project-file-input {
+  flex: 1 1 180px;
+  height: 28px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--on-ink);
+  background: var(--on-ink-fill-1);
+  border: 0;
+  border-radius: var(--r-control);
+  outline: none;
+}
+
+.project-file-input::placeholder {
+  color: var(--on-ink-3);
+}

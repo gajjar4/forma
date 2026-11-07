@@ -1,0 +1,39 @@
+# On a version tag (v0.1.0): build Forma.app for Apple silicon and Intel in
+# one, and attach it to a GitHub release. npx forma-board downloads it from
+# there.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm tauri build --target universal-apple-darwin --bundles app
+      - name: Pack
+        run: |
+          APP=src-tauri/target/universal-apple-darwin/release/bundle/macos/Forma.app
+          # A local signature, so every part of the bundle checks out on the Mac it lands on.
+          codesign --force --deep --sign - "$APP"
+          tar -czf Forma-macos.app.tar.gz -C "$(dirname "$APP")" Forma.app
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" Forma-macos.app.tar.gz --title "Forma $GITHUB_REF_NAME" --generate-notes

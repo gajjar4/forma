@@ -1,0 +1,539 @@
+/* Ports: invisible 20px hit areas at each side's midpoint. What you see is a
+   "+" the dot grid gathers there out of its own dots (src/canvas/gridFx.*).
+   A wire starts at the outer edge of the port, 10px out: the "+"'s centre. */
+.port.react-flow__handle {
+  width: 20px;
+  height: 20px;
+  min-width: 0;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+}
+
+/* A generous, invisible grab area centred on the dot "+" (which sits 10px
+   out from the edge), so you don't have to hit the tiny dots. The handle
+   itself stays small, so the wire still starts at the "+". */
+.port.react-flow__handle::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  translate: -50% -50%;
+}
+
+.react-flow__handle-top.port::before {
+  translate: -50% calc(-50% - 10px);
+}
+
+.react-flow__handle-right.port::before {
+  translate: calc(-50% + 10px) -50%;
+}
+
+.react-flow__handle-bottom.port::before {
+  translate: -50% calc(-50% + 10px);
+}
+
+.react-flow__handle-left.port::before {
+  translate: calc(-50% - 10px) -50%;
+}
+
+/* Semantic zoom. src/canvas/zoom.ts writes two things onto .react-flow,
+   outside React, when a zoom comes to rest (and every so often during a long
+   one). Nothing changes while you zoom or pan, so both stay as cheap as a
+   plain board.
+   - --z is the zoom. Titles counter-scale from it so they stay about 12px on
+     screen when zoomed out, up to a cap, and glide to their new size. Only
+     `scale` and text inside fixed boxes change: no node ever changes size, so
+     nothing re-measures.
+   - data-detail="off" once zoomed out past about 55%. Body text, counts, card
+     titles and wire notes fade out, and come back the same way. Each of them
+     is its own layer, so the fade runs on the compositor.
+   Outside the board (an opened stack) --detail falls back to 1.
+   --z reaches only what reads it. It is registered as not inherited and
+   passed down one chain of elements, so writing it restyles those few and
+   leaves everything else alone (the piles, their faces, the pictures). When
+   it inherited everywhere, each write restyled the whole board: with 40
+   notes in stacks about 5ms, and a dropped frame on most writes during a
+   long pinch. Anything new that reads --z joins the chain below. */
+@property --z {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+.react-flow__renderer,
+.react-flow__pane,
+.react-flow__viewport,
+.react-flow__nodes,
+.react-flow__edgelabel-renderer,
+.react-flow__node,
+.wire-label,
+.wire-note,
+.wire-input,
+.project,
+.project-title,
+.note,
+.stack,
+.stack-label,
+.stack-label-in,
+.stack > .react-flow__handle-bottom,
+.card,
+.card-title,
+.card > .react-flow__handle-bottom,
+.area,
+.area-title {
+  --z: inherit;
+}
+
+.react-flow {
+  --detail: 1;
+}
+
+.react-flow[data-detail="off"] {
+  --detail: 0;
+}
+
+/* Project: the dark block everything connects back to. */
+.project {
+  position: relative;
+  width: 352px; /* 11 dots: both edges land on the grid */
+  padding: 24px 28px 26px;
+  color: var(--on-ink);
+  background: var(--ink);
+  border-radius: var(--r-block);
+  box-shadow: var(--shadow-lift);
+}
+
+.project-kicker {
+  opacity: calc(var(--detail, 1) * 0.45);
+  transition: opacity var(--t-slow) var(--ease-out);
+  will-change: opacity;
+  font-family: var(--mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+}
+
+.project-title,
+.project-title-size {
+  margin-top: 10px;
+  font-size: var(--text-display);
+  font-weight: 600;
+  letter-spacing: var(--track-display);
+  line-height: 1.05;
+}
+
+/* Holds the title's place in the block. */
+.project-title-size {
+  visibility: hidden;
+}
+
+/* The title you see sits where the hidden copy is (its static position) and
+   grows when zoomed out, from where the brief fades, holding about 16.5px on
+   screen and rewrapping to stay inside the block. */
+.project-title {
+  --s: clamp(1, calc(0.55 / var(--z, 1)), 2.4);
+  position: absolute;
+  transition: scale var(--t-slow) var(--ease-out);
+  will-change: transform;
+  width: calc((100% - 56px) / var(--s));
+  scale: var(--s);
+  transform-origin: 0 0;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.project-brief {
+  margin: 10px 0 0;
+  font-size: var(--text-md);
+  line-height: 1.45;
+  opacity: calc(var(--detail, 1) * 0.68);
+  transition: opacity var(--t-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+.project-brief[data-empty] {
+  opacity: calc(var(--detail, 1) * 0.42);
+}
+
+/* Writing the brief: the same words in the same place, now a field. */
+.project-brief-edit {
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  font: inherit;
+  font-size: var(--text-md);
+  line-height: 1.45;
+  color: inherit;
+  background: none;
+  border: 0;
+  outline: none;
+  resize: none;
+  opacity: 0.86;
+}
+
+.project-brief-edit::placeholder {
+  color: inherit;
+  opacity: 0.5;
+}
+
+/* Selected things lift a little. Never a border or outline. */
+.project[data-selected] {
+  box-shadow: var(--shadow-high);
+}
+
+/* Note: research in words. --s is how much its heading grows zoomed out. */
+.note {
+  --s: clamp(1, calc(0.93 / var(--z, 1)), 3.2);
+  position: relative;
+  width: 256px; /* 8 dots: both edges land on the grid */
+  padding: 16px 18px 18px;
+  background: var(--card);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-rest);
+  transition: box-shadow var(--t-base) ease;
+}
+
+/* The hidden copy sizes the note; the one you see sits on top of it, in the
+   same box. Zoomed out its heading grows (by font size, so it rewraps and
+   pushes the body down) to about 12.5px on screen, while the body fades. What
+   runs past the bottom fades out in the padding instead of being cut. */
+.note-size {
+  visibility: hidden;
+}
+
+.note-show {
+  position: absolute;
+  inset: 0;
+  padding: inherit;
+  overflow: hidden;
+  border-radius: inherit;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent);
+}
+
+.note-head {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: var(--track-tight);
+  overflow-wrap: break-word;
+}
+
+.note-show .note-head {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: calc(var(--text-lg) * var(--s));
+  transition: font-size var(--t-slow) var(--ease-out);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.note-body {
+  margin: 6px 0 0;
+  font-size: var(--text-md);
+  line-height: 1.5;
+  white-space: pre-line;
+  color: var(--ink-2);
+}
+
+.note-show .note-body {
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+.note[data-selected],
+.card[data-selected] .card-media,
+.stack[data-selected] .stack-card:last-child {
+  box-shadow: var(--shadow-lift);
+}
+
+/* Drop hint on a note: the same soft glow a card gets. No border. */
+.note[data-target] {
+  box-shadow: var(--shadow-drop);
+}
+
+/* Stack: a pile with its name underneath. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* A stack's ports. The sides sit out past the fanned cards, level with the
+   middle of the pile; the bottom sits under the title as it looks right now.
+   They match body.ts (PILE, FAN_ASIDE, stackLabelBelow), so the dot "+" and
+   the place a pulled wire starts are the same. */
+.stack > .port.react-flow__handle-left {
+  top: 100px;
+  left: -44px;
+}
+
+.stack > .port.react-flow__handle-right {
+  top: 100px;
+  right: -44px;
+}
+
+/* How much the label is scaled up at this zoom, and whether the title has
+   wrapped to two lines (--tw is its one-line width, set by StackNode).
+   Worked out on the label and its port only, so the pile never restyles
+   with the zoom. body.ts does the same sums for wires and the dot "+"s. */
+.stack-label-in,
+.stack > .port.react-flow__handle-bottom {
+  --ls: clamp(1, calc(0.96 / var(--z, 1)), 3.4);
+  --wrap: clamp(0, calc((var(--tw, 0) * var(--ls) - 280) * 100), 1);
+}
+
+.stack > .port.react-flow__handle-bottom {
+  top: calc(212px + var(--ls) * (1 + var(--wrap) + var(--desc, 0) * var(--detail, 1)) * 17px);
+  bottom: auto;
+  transform: translate(-50%, -50%);
+}
+
+.stack-pile {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.stack-pile::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: var(--r-block);
+  pointer-events: none;
+  transition: background var(--t-base) ease;
+}
+
+/* Drop hint: a soft glow behind the pile (it also fans out). No border. */
+.stack[data-target] .stack-pile::after {
+  background: var(--drop);
+}
+
+/* The fan. Each card's rest and fan pose come in as custom properties
+   (StackNode.tsx); hovering the stack, or holding something over it, swaps
+   one for the other with a springy transition. Every card is its own layer,
+   prepared up front, so the fan only moves layers and never repaints. */
+.stack-card {
+  grid-area: 1 / 1;
+  overflow: hidden;
+  background: var(--card);
+  border-radius: var(--r-control);
+  box-shadow: var(--shadow-rest);
+  transform: translate(var(--rx, 0px), var(--ry, 0px)) rotate(var(--rr, 0deg)) scale(var(--rs, 1));
+  transition: transform var(--t-slow) var(--spring), box-shadow var(--t-base) ease;
+  will-change: transform;
+}
+
+/* An image with a note: a corner of paper behind it (see .ft[data-note] in
+   focus.css). The card can't clip, so the picture rounds its own corners. It
+   is part of the card's layer, so the fan and panning never repaint it. */
+.stack-card[data-note] {
+  overflow: visible;
+}
+
+.stack-card[data-note] img {
+  border-radius: inherit;
+}
+
+.stack-card[data-note]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  width: 18%;
+  aspect-ratio: 1;
+  background: var(--paper);
+  border-radius: var(--r-paper);
+  box-shadow: var(--paper-shadow);
+  transform: translate(30%, -30%) rotate(8deg);
+}
+
+.stack:hover .stack-card {
+  transform: translate(var(--fx, 0px), var(--fy, 0px)) rotate(var(--fr, 0deg)) scale(var(--fs, 1));
+}
+
+.stack[data-target] .stack-card {
+  transform: translate(var(--fx, 0px), var(--fy, 0px)) rotate(var(--fr, 0deg)) scale(var(--ts, 1));
+}
+
+.stack-card img,
+.card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The label keeps one fixed row in the layout (two with a description), so
+   the stack never changes size. What you see sits on top, centred, and grows
+   to about 12.5px on screen when zoomed out, wrapping to two lines at most
+   so it stays clear of its neighbours. */
+.stack-label {
+  position: relative;
+  width: 100%;
+  height: 17px;
+  margin-top: 12px;
+}
+
+.stack-label[data-desc] {
+  height: 34px;
+}
+
+.stack-label-in {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  max-width: calc(280px / var(--ls));
+  translate: -50% 0;
+  scale: var(--ls);
+  transform-origin: 50% 0;
+  transition: scale var(--t-slow) var(--ease-out);
+  will-change: transform;
+}
+
+/* The title is centred under the pile on its own; the count hangs off its
+   right side, so fading the count never moves the title. */
+.stack-label-row {
+  position: relative;
+  max-width: 100%;
+}
+
+.stack-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: var(--track-title);
+  text-align: center;
+  cursor: text;
+  /* The board's halo (--halo): a wire passing under fades out around the words. */
+  background: var(--canvas);
+  border-radius: var(--r-sm);
+  box-shadow: var(--halo);
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Renaming: a small white field, like naming a new board. No border. */
+.stack-rename {
+  width: 150px;
+  padding: 3px 6px;
+  margin: -3px 0;
+  font-size: var(--text-md);
+  font-weight: 500;
+  text-align: center;
+  background: var(--card);
+  border: 0;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-control);
+  outline: none;
+}
+
+/* The count, in words, in the quiet mono style. It sits 8px right of the
+   title (inside the label, so the gap scales with it) and fades zoomed out. */
+.stack-count {
+  position: absolute;
+  top: 1px;
+  left: 100%;
+  margin-left: 8px;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  line-height: 17px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink-3);
+  background: var(--canvas);
+  border-radius: var(--r-sm);
+  box-shadow: var(--halo);
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+.stack-desc {
+  max-width: 100%;
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  line-height: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink-2);
+  background: var(--canvas);
+  border-radius: var(--r-sm);
+  box-shadow: var(--halo);
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+/* Card: one loose item. */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-media {
+  overflow: hidden;
+  background: var(--card);
+  border-radius: var(--r-control);
+  box-shadow: var(--shadow-rest);
+  transition: box-shadow var(--t-base) ease;
+}
+
+.react-flow__node.dragging .card-media,
+.react-flow__node.dragging .stack-card:last-child {
+  box-shadow: var(--shadow-lift);
+}
+
+.card[data-target] .card-media {
+  box-shadow: var(--shadow-drop);
+}
+
+/* A link card: white, a little rounder than an image, like a note. */
+.card[data-kind="link"] .card-media {
+  border-radius: var(--r-card);
+}
+
+/* A titled card's bottom port follows its title as it grows (body.ts). */
+.card[data-titled] > .port.react-flow__handle-bottom {
+  bottom: calc((1 - clamp(1, calc(1 / var(--z, 1)), 1.8)) * 16px * var(--detail, 1));
+}
+
+.card[data-kind="live"][data-titled] > .port.react-flow__handle-bottom {
+  bottom: calc((1 - clamp(1, calc(0.96 / var(--z, 1)), 3.4)) * 17px);
+}
+
+/* Card titles show all the time (they always have: an old hover rule never
+   matched). Zoomed out they grow a little, then fade with the detail. */
+.card-title {
+  margin-top: 8px;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  /* The board's halo (--halo): a wire passing under fades out around the words. */
+  background: var(--canvas);
+  border-radius: var(--r-sm);
+  box-shadow: var(--halo);
+
+  scale: clamp(1, calc(1 / var(--z, 1)), 1.8);
+  transform-origin: 50% 0;
+  opacity: var(--detail, 1);
+  transition: opacity var(--t-slow) var(--ease-out), scale var(--t-slow) var(--ease-out);
+  will-change: opacity, transform;
+}

@@ -1,0 +1,257 @@
+/* The home: Forma with no board open. A board of boards, on the same warm
+   surface and dots as a board, every board a pile (see src/home/). */
+
+.home {
+  position: fixed;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--canvas);
+  /* Hidden until the piles' pictures are decoded; Home.tsx fades it in, and
+     moves the camera into a pile (a transform from the top left) going in. */
+  opacity: 0;
+  transform-origin: 0 0;
+  will-change: transform, opacity;
+}
+
+/* The dots belong to the surface, so they scroll with the piles. One dot per
+   32px (GRID), 2px across in the --dot colour, the first at the surface's
+   own top left, so every pile centred on a spot sits on a dot. */
+.home-surface {
+  position: relative;
+  min-height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ccircle cx='16' cy='16' r='1' fill='%23141412' fill-opacity='0.2'/%3E%3C/svg%3E");
+  background-position: -16px -16px;
+  background-size: 32px 32px;
+}
+
+/* A board: its pile, its name, one quiet line. Placed by its centre (the
+   inline translate is the spot) and glides to a new one when the window
+   changes size. The cards are a stack's (.stack-pile, .stack-card in
+   nodes.css): prepared layers, fanned with a plain transition. */
+.home-pile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 256px;
+  margin: -100px 0 0 -128px;
+  outline: none;
+  transition: translate var(--t-glide) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.home-pile:hover .stack-card,
+.home-pile:focus-visible .stack-card,
+.home-new[data-naming] .stack-card {
+  transform: translate(var(--fx, 0px), var(--fy, 0px)) rotate(var(--fr, 0deg)) scale(var(--fs, 1));
+}
+
+.home-pile:hover .stack-card:last-child,
+.home-pile:focus-visible .stack-card:last-child {
+  box-shadow: var(--shadow-lift);
+}
+
+.home-pile-name {
+  max-width: 240px;
+  margin-top: 12px;
+  overflow: hidden;
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: var(--track-title);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink);
+}
+
+.home-pile-meta {
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  line-height: 15px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink-3);
+}
+
+/* A new board: an empty spot on the surface, the dots showing through, with
+   Forma's dot-plus on it. Hovered, or being named, it lifts into a card. */
+.home-new > .stack-pile {
+  outline: none;
+}
+
+.home-new-card {
+  display: grid;
+  place-items: center;
+  background: var(--fill-1);
+  border-radius: var(--r-control);
+  box-shadow: none;
+  transition: transform var(--t-slow) var(--spring), background-color var(--t-base) ease, box-shadow var(--t-base) ease;
+}
+
+.home-new:hover .home-new-card,
+.home-new[data-naming] .home-new-card,
+.home-new > .stack-pile:focus-visible .home-new-card {
+  background: var(--card);
+  box-shadow: var(--shadow-rest);
+}
+
+/* Five dots the shape of the app icon's plus: each one sits --arm out from
+   the middle; hovering opens the plus a little. */
+.home-plus {
+  --arm: 11px;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+.home-plus i {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+  background: rgba(22, 22, 21, 0.42);
+  border-radius: 50%;
+  translate: calc(var(--dx) * var(--arm)) calc(var(--dy) * var(--arm));
+  transition: translate var(--t-slow) var(--spring), background-color var(--t-base) ease;
+}
+
+.home-new:hover .home-plus,
+.home-new[data-naming] .home-plus {
+  --arm: 13px;
+}
+
+.home-new:hover .home-plus i,
+.home-new[data-naming] .home-plus i {
+  background: var(--ink);
+}
+
+.home-new .home-pile-name {
+  color: var(--ink-2);
+  transition: color var(--t-fast) ease;
+}
+
+.home-new:hover .home-pile-name {
+  color: var(--ink);
+}
+
+/* Naming it: the title becomes a small white field, no border. */
+.home-new-input {
+  box-sizing: border-box;
+  width: 184px;
+  height: 26px;
+  margin-top: 8px;
+  padding: 0 10px;
+  font-size: var(--text-md);
+  font-weight: 500;
+  text-align: center;
+  background: var(--card);
+  border: 0;
+  border-radius: var(--r-control);
+  box-shadow: var(--shadow-control);
+  outline: none;
+}
+
+.home-new-input::placeholder {
+  color: var(--ink-3);
+}
+
+/* With no boards yet, one line under the new one. */
+.home-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 400px;
+  margin: 168px 0 0 -200px;
+  font-size: var(--text-sm);
+  line-height: 18px;
+  text-align: center;
+  color: var(--ink-3);
+}
+
+.home-line button {
+  font-weight: 500;
+  color: var(--ink-2);
+  transition: color var(--t-fast) ease;
+}
+
+.home-line button:hover {
+  color: var(--ink);
+}
+
+/* The chrome: the Forma pill top left (ProjectChip's, in project.css) and
+   one way to a board kept somewhere else, top right. Above the title bar's
+   drag strip, like the board's own pill. */
+.home-chrome {
+  position: relative;
+  z-index: 31;
+}
+
+/* The title: plain type, no box. It isn't a menu, so it doesn't dress as
+   one; its padding matches the board's pill so "Forma" lines up with a
+   board's name in the same spot. */
+.project-chip-button.home-chip,
+.project-chip-button.home-chip:hover {
+  padding: 0 11px;
+  font-weight: 600;
+  letter-spacing: var(--track-tight);
+  background: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+.project-chip[data-full] .project-chip-button.home-chip {
+  padding: 0 13px;
+}
+
+.home-open {
+  position: fixed;
+  top: 5px;
+  right: 12px;
+  height: 28px;
+  padding: 0 11px;
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--ink-2);
+  border-radius: var(--r-control);
+  transition: color var(--t-fast) ease;
+}
+
+.home-open[data-full] {
+  top: 16px;
+  right: 16px;
+  height: 32px;
+  padding: 0 13px;
+}
+
+/* The quiet way in for boards kept elsewhere: text, darkening on hover. */
+.home-open:hover {
+  color: var(--ink);
+}
+
+.home-error {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  max-width: 480px;
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  text-align: center;
+  color: var(--ink);
+  translate: -50% 0;
+}
+
+/* The bare surface over a board while it arrives or leaves (Veil.tsx). Over
+   the board and its toolbar, under the pill top left. */
+.veil-board {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  background: var(--canvas);
+  pointer-events: none;
+}
